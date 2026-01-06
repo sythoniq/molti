@@ -1,7 +1,7 @@
 #ifndef cmolti_chunk_h
 #define cmolti_chunk_h
 
-#include "./common.h"
+#include "common.h"
 
 typedef enum {
   OP_RETURN,
