@@ -1,0 +1,18 @@
+-- This file will outline my understanding of each concept --
+
+> So far in the chunk that contains a dynamic array of bytecode that is
+> basically opcode, we can initialize the chunk and in so doing we handle memory
+> matters like growing the array or freeing up some memory using the contents in
+> the memory header file and the soon to come memory.c file. 
+
+** The reallocate function is the core function that will handle all of the
+dynamic array allocations and will be used later for garbage collector when its
+implemented **
+
+> From my understanding the reallocate function will take any dynamic array and
+> from there will either resize it or free it up. So we can pass the chunk->code
+> array for these things when using the chunk.
+
+> A dissasembler will take the bytecode that we have and will give us textual
+> information on what is happening under the hood with the bytes and memory
+> stuff.

@@ -9,8 +9,10 @@ void initChunk(Chunk* chunk) {
 }
 
 void freeChunk(Chunk* chunk) {
-  FREE_ARRAY(uint8_t, chunk->code, chunk->capacity);
-  initChunk(chunk);
+  FREE_ARRAY(uint8_t, chunk->code, chunk->capacity); // Basically the type of
+  // the array and then the pointer to the array ie chunk->code and the current
+  // capacity/size which will be oldCap in the header/reallocate func
+  initChunk(chunk); // Zero out everything and create an empty state.
 }
 
 void writeChuck(Chunk* chunk, uint8_t byte) {
