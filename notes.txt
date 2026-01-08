@@ -21,7 +21,7 @@ opcodes that will be used in the VM and iterated through.
     and thus increments the offset to the next item in the chunk array, now the
     link between this portion of the program and the next one will be explained
     next
- > And the final one for now, where we have the value header file and its C
+ > Next up, we have the value header file and its C
     file, in this file we find a few methods and a struct that holds another
     dynamic array along with a new double data structure/type idk what to call
     it. The new dynamic array will hold the constants that are passed to the
@@ -32,6 +32,12 @@ opcodes that will be used in the VM and iterated through.
     operand/constant, thus it can read that data and output it.
     This is it mostly to my understanding of the moving parts of the interpreter
     so far.
+  > Next up there is the extra sauce line information, in this portion of this
+     chapter, we are introduced to the need to keep track of which line the
+     current byte in the bytecode that is being disassembled needs to be tracked
+     to allow for better error handling, this is done by creating a new dynamic
+     array of lines in the chunk structure, and adding a line parameter to the
+     chunk methods to contain the line number of each byte at each chunk.
 
 -- What have I learnt --
 > Structs and there interactions with pointers and how pointers generally work.
