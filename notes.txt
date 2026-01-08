@@ -1,18 +1,42 @@
 -- This file will outline my understanding of each concept --
+> Starting from the top, we first included the chunk header file and a chunk c
+file, in the header file we defined the methods and the structs that will be
+used for the chunk.
+-> In the chunk struct there is metadata, to handle the growing or freeing of
+the dynamic array in the chunk struct. That dynamic array is a collection of
+opcodes that will be used in the VM and iterated through.
 
-> So far in the chunk that contains a dynamic array of bytecode that is
-> basically opcode, we can initialize the chunk and in so doing we handle memory
-> matters like growing the array or freeing up some memory using the contents in
-> the memory header file and the soon to come memory.c file. 
+ > Next up the memory header and c file, the methods GROW_CAPACITY, GROW_ARRAY
+ and FREE_ARRAY, are handling memory for the chunks, with the core of the
+ entire program revolving around reallocate, that takes in the type of the
+ array, a pointer to the array, the oldSize and a newSize. It explictily does
+ either grow the array if oldSize is too small for the needed purpose, or it
+ frees up some memory if specified
+ 
+ > Next up is the debug header file and its corresponding c file, the debug file
+    for now has the disassembler that takes the bytecode interaction in the
+    machine and returns human friendly information to work through, it has a set
+    of instructions that are passed into the switch statement for specific
+    instructions, for now it takes an instruction and performs that operation
+    and thus increments the offset to the next item in the chunk array, now the
+    link between this portion of the program and the next one will be explained
+    next
+ > And the final one for now, where we have the value header file and its C
+    file, in this file we find a few methods and a struct that holds another
+    dynamic array along with a new double data structure/type idk what to call
+    it. The new dynamic array will hold the constants that are passed to the
+    chunk array that can be referenced by the disassembler to output, the offset
+    in the disassembler comes into play here since once the offset is
+    incremented it points to the next element in the chunk array which if the
+    preceeding one was a opcode/instruction the next one is likely to be a
+    operand/constant, thus it can read that data and output it.
+    This is it mostly to my understanding of the moving parts of the interpreter
+    so far.
 
-** The reallocate function is the core function that will handle all of the
-dynamic array allocations and will be used later for garbage collector when its
-implemented **
+-- What have I learnt --
+> Structs and there interactions with pointers and how pointers generally work.
 
-> From my understanding the reallocate function will take any dynamic array and
-> from there will either resize it or free it up. So we can pass the chunk->code
-> array for these things when using the chunk.
+> typecasting and typecasting to pointers ( *Exposed to it by the memory header
+ file at reallocate* )
 
-> A dissasembler will take the bytecode that we have and will give us textual
-> information on what is happening under the hood with the bytes and memory
-> stuff.
+>  
