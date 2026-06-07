@@ -5,6 +5,7 @@
 
 #include "common.h"
 #include "memory.h"
+#include "value.h"
 
 /*
 - Using typedef to work as an alias and remove the need to repeat enum on every call of a enum variable/instance. 
@@ -12,6 +13,7 @@
 */
 
 typedef enum {
+				OP_CONSTANT,
 				OP_RETURN
 } OpCode;
 
@@ -23,14 +25,18 @@ typedef struct {
 				int capacity;
 				int count;
 				uint8_t *code;
+				int* lines;
+				ValueArray constants;
 } Chunk;
 
 void initChunk(Chunk *chunk);
 
 // Write a byte to a chunk
-void writeChunk(Chunk *chunk, uint8_t byte);
+void writeChunk(Chunk *chunk, uint8_t byte, int line);
 
 // Free memory
 void freeChunk(Chunk *chunk);
+
+int addConstant(Chunk *chunk, Value value);
 
 #endif
