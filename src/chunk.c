@@ -2,6 +2,8 @@
 #include "memory.h"
 #include "value.h"
 
+
+
 void initChunk(Chunk *chunk) {
 				chunk->capacity = 0;
 				chunk->count = 0;
@@ -11,6 +13,7 @@ void initChunk(Chunk *chunk) {
 }
 
 void writeChunk(Chunk *chunk, uint8_t byte, int line) {
+				int repeat_counter = 1;
 				if (chunk->capacity < chunk->count + 1) {
 								int oldCap = chunk->capacity;
 								chunk->capacity = GROW_CAPACITY(oldCap);
@@ -18,7 +21,18 @@ void writeChunk(Chunk *chunk, uint8_t byte, int line) {
 								chunk->lines = GROW_ARRAY(int, chunk->lines, oldCap, chunk->capacity);
 				}
 				chunk->code[chunk->count] = byte;
-				chunk->lines[chunk->count] = line;
+				if (chunk->count != 0) {
+								if (chunk->lines[chunk->count - 1] == line) {
+												chunk->lines[chunk->count] = repeat_counter;
+												repeat_counter++;
+												printf("New Line Array: %d Counter: %d\n", *chunk->lines, repeat_counter);
+								} else {
+												repeat_counter = 1;
+												chunk->lines[chunk->count] = line;
+								}
+				} else {
+								chunk->lines[chunk->count] = line; 
+				}
 				chunk->count++;
 }
 
