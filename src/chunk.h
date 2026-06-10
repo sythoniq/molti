@@ -17,6 +17,11 @@ typedef enum {
 				OP_RETURN
 } OpCode;
 
+typedef struct {
+				int offset;
+				int line;
+} Lines;
+
 /* 
 - So declaring a dynamic array that will contain chunks of byte code and it will expand accordingly whether there is enough space ie (capacity > count) if not then; allocate a new array and copy the contents of the previous array and ensure the new array has double the capacity.
 */
@@ -25,9 +30,13 @@ typedef struct {
 				int capacity;
 				int count;
 				uint8_t *code;
-				int* lines;
+				int lineCount;
+				int lineCapacity;
+				Lines *lines;
 				ValueArray constants;
 } Chunk;
+
+int getLine(Chunk *chunk, int instruction);
 
 void initChunk(Chunk *chunk);
 
