@@ -20,7 +20,7 @@ int getLine(Chunk *chunk, int instruction) {
 				}
 }
 
-void initChunk(Chunk *chunk) {
+void initValueChunk(Chunk *chunk) {
 				chunk->capacity = 0;
 				chunk->count = 0;
 				chunk->code = NULL;
@@ -39,7 +39,7 @@ void writeChunk(Chunk *chunk, uint8_t byte, int line) {
 				chunk->code[chunk->count] = byte;
 				chunk->count++;
 
-				if (chunk->lineCount > 0 && chunk->lines[chunk->count - 1].line == line) 
+				if (chunk->lineCount > 0 && chunk->lines[chunk->lineCount - 1].line == line) 
 								return;
 
 				if (chunk->lineCapacity < chunk->lineCount + 1) {
@@ -48,21 +48,41 @@ void writeChunk(Chunk *chunk, uint8_t byte, int line) {
 								chunk->lines = GROW_ARRAY(Lines, chunk->lines, oldCap, chunk->lineCapacity);
 				}
 
-				Lines *lines = &chunk->lines[chunk->lineCount + 1];
+				Lines *lines = &chunk->lines[chunk->lineCount++];
 				lines->offset = chunk->count - 1;
 				lines->line = line;
 }
 
-void freeChunk(Chunk *chunk) {
+void freeValueChunk(Chunk *chunk) {
 				FREE_ARRAY(uint8_t, chunk->code, chunk->capacity);
 				FREE_ARRAY(int, chunk->lines, chunk->lineCapacity);
 				freeValueArray(&chunk->constants);
-				initChunk(chunk);
+				initValueChunk(chunk);
 }
 
-// Returning offset - 1, since we need to locate where exactly the constant was added ie its actual index within the constant array, fancy.
+// Returning offset - 1, since we need to locate where exactly the constant was added ie its actual constantIndex within the constant array, fancy.
 
 int addConstant(Chunk *chunk, Value value) {
 				writeValueArray(&chunk->constants, value);
 				return chunk->constants.count - 1;
+}
+
+// If the constantIndex fits in one byte we write it to the normal op constant else we write it to long const tho the value is split into multiple bytes and the endianness choses here is little endian ie the least significant (lowest value) byte of the long byte comes first
+
+// We right shift the constantIndex to get the least significant bit from the byte of code (long const)
+
+// This quite literally allows us to access chunks past 255 within the constants array since it only takes one byte as its index
+void writeConstant(Chunk *chunk, Value value, int line) {
+				// Adding the value to the constant array and getting its constantIndex/position in the array.
+				int constantIndex = addConstant(chunk, value);
+				printf("Constant Index: %d\n", constantIndex);
+				if (constantIndex < 256) {
+								writeChunk(chunk, OP_CONSTANT, line);
+								writeChunk(chunk, (uint8_t)constantIndex, line);
+				} else {
+								writeChunk(chunk, OP_CONSTANT_LONG, line);
+								writeChunk(chunk, (uint8_t)(constantIndex & 0xff), line);
+								writeChunk(chunk, (uint8_t)((constantIndex >> 8) & 0xff), line);
+								writeChunk(chunk, (uint8_t)((constantIndex >> 16) & 0xff), line);
+				}
 }

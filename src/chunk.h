@@ -14,6 +14,7 @@
 
 typedef enum {
 				OP_CONSTANT,
+				OP_CONSTANT_LONG,
 				OP_RETURN
 } OpCode;
 
@@ -38,14 +39,17 @@ typedef struct {
 
 int getLine(Chunk *chunk, int instruction);
 
-void initChunk(Chunk *chunk);
+void initValueChunk(Chunk *chunk);
 
 // Write a byte to a chunk
 void writeChunk(Chunk *chunk, uint8_t byte, int line);
 
 // Free memory
-void freeChunk(Chunk *chunk);
+void freeValueChunk(Chunk *chunk);
 
 int addConstant(Chunk *chunk, Value value);
+
+// Helper function to write all consants while checking index to decide whether its a long const or a normal one (OP_CONSTANT and OP_CONSTANT_LONG)
+void writeConstant(Chunk *chunk, Value value, int line);
 
 #endif

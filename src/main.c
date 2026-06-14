@@ -4,12 +4,10 @@
 
 int main(int argc, const char* argv[]) {
 				Chunk chunk;
-				initChunk(&chunk);
-				int constant = addConstant(&chunk, 1.2);
-				writeChunk(&chunk, OP_CONSTANT, 123);
-				writeChunk(&chunk, constant, 123);
-				writeChunk(&chunk, OP_RETURN, 123);
+				initValueChunk(&chunk);
+				writeConstant(&chunk, 100, 1);
+				writeChunk(&chunk, OP_RETURN, 2);
 				disassembleChunk(&chunk, "test chunk");
-				freeChunk(&chunk);
+				freeValueChunk(&chunk);
 				return 0;
 }
