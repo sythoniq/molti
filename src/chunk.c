@@ -67,11 +67,7 @@ int addConstant(Chunk *chunk, Value value) {
 				return chunk->constants.count - 1;
 }
 
-// If the constantIndex fits in one byte we write it to the normal op constant else we write it to long const tho the value is split into multiple bytes and the endianness choses here is little endian ie the least significant (lowest value) byte of the long byte comes first
-
-// We right shift the constantIndex to get the least significant bit from the byte of code (long const)
-
-// This quite literally allows us to access chunks past 255 within the constants array since it only takes one byte as its index
+// If the current index of the value within the constants array is more than 256 (more than a byte), the code array that holds our instructions/opcodes as well as a pointer to the constants array after an instruction wont be able to handle it as such we break down the index using little endian (least significant byte first) and pass them to the code array for later referencing to the constants array.
 void writeConstant(Chunk *chunk, Value value, int line) {
 				// Adding the value to the constant array and getting its constantIndex/position in the array.
 				int constantIndex = addConstant(chunk, value);
