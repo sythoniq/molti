@@ -6,7 +6,7 @@ int getLine(Chunk *chunk, int instruction) {
 				int start = 0;
 				int end = chunk->lineCount - 1;
 
-				for (;;) {
+				for (;;) { // Basically a while loop, a infinite loop until a break
 								int mid = (start + end) / 2;
 								Lines *line = &chunk->lines[mid];
 								if (instruction < line->offset) {
