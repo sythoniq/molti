@@ -8,7 +8,7 @@ int getLine(Chunk *chunk, int instruction) {
 
 				for (;;) { // Basically a while loop, a infinite loop until a break
 								int mid = (start + end) / 2;
-								Lines *line = &chunk->lines[mid];
+								LineStart *line = &chunk->lines[mid];
 								if (instruction < line->offset) {
 												end = mid - 1;
 								} else if (mid == chunk->lineCount - 1 ||
@@ -45,12 +45,12 @@ void writeChunk(Chunk *chunk, uint8_t byte, int line) {
 				if (chunk->lineCapacity < chunk->lineCount + 1) {
 								int oldCap = chunk->lineCapacity;
 								chunk->lineCapacity = GROW_CAPACITY(oldCap);
-								chunk->lines = GROW_ARRAY(Lines, chunk->lines, oldCap, chunk->lineCapacity);
+								chunk->lines = GROW_ARRAY(LineStart, chunk->lines, oldCap, chunk->lineCapacity);
 				}
 
-				Lines *lines = &chunk->lines[chunk->lineCount++];
-				lines->offset = chunk->count - 1;
-				lines->line = line;
+				LineStart *lineStart = &chunk->lines[chunk->lineCount++];
+				lineStart->offset = chunk->count - 1;
+				lineStart->line = line;
 }
 
 void freeValueChunk(Chunk *chunk) {

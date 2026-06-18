@@ -26,8 +26,8 @@ typedef enum {
 void initializeVM();
 void freeVM();
 
-void pushValueToStack(Value value);
-Value popValueFromStack();
+void push(Value value);
+Value pop();
 
 InterpreterResult interpret(Chunk *chunk);
 #endif
