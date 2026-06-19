@@ -2,6 +2,7 @@
 #include "vm.h"
 #include "common.h"
 #include "debug.h"
+#include "compiler.h"
 
 // Declaring a global vm variable to not have to pass a pointer to vm to each function.
 VM vm;
@@ -76,8 +77,7 @@ static InterpreterResult run() {
 #undef READ_BYTE
 }
 
-InterpreterResult interpret(Chunk *chunk) {
-				vm.chunk = chunk;
-				vm.ip = vm.chunk->code;
-				return run();
+InterpreterResult interpret(const char* source) {
+				compile(source);
+				return INTERPRET_OK;
 }

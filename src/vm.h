@@ -29,5 +29,5 @@ void freeVM();
 void push(Value value);
 Value pop();
 
-InterpreterResult interpret(Chunk *chunk);
+InterpreterResult interpret(const char* source);
 #endif
