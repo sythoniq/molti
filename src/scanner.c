@@ -28,6 +28,10 @@ static char advance() {
 	return scanner.current[-1];
 }
 
+static char peek() {
+	return *scanner.current;
+}
+
 static Token makeToken(TokenType type) {
 	Token token;
 	token.type = type;
@@ -46,6 +50,26 @@ static Token errorToken(const char* error) {
 	token.line = scanner.line;
 
 	return token;
+}
+
+static void skipWhiteSpace() {
+	for (;;) {
+		char c = peek();
+
+		switch(c) {
+			case ' ': 
+			case '\r':
+			case '\t':
+				advance();
+				break;
+			case '\n':
+				scanner.line++;
+				advance();
+				break;
+			default: 
+				return;
+		} 
+	}
 }
 
 void initScanner(const char* source) {
