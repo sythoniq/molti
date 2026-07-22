@@ -84,6 +84,30 @@ static void skipWhiteSpace() {
 	}
 }
 
+static TokenType identifierType() {
+	return TOKEN_IDENTIFIER;
+}
+
+static bool isDigit(char c) {
+	return c >= '0' && c <= '9';
+}
+
+static bool isAlpha(char c) {
+	return (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_';
+}
+
+static Token number() {
+	while (isDigit(peek())) advance();	
+
+	if (peek() == '.' && isDigit(peekNext())) {
+		advance();
+
+		while (isDigit(peek())) advance();
+	}
+
+	return makeToken(TOKEN_NUMBER);
+}
+
 static Token string() {
 	while (peek() != '"' && !isAtEnd()) {
 		if (peek() == '\n') scanner.line++;
@@ -93,6 +117,11 @@ static Token string() {
 
 	advance();
 	return makeToken(TOKEN_STRING); 
+}
+
+static Token identifier() {
+	while (isAlpha(peek()) || isDigit(peek())) advance();
+	return makeToken(identifierType())
 }
 
 void initScanner(const char* source) {
@@ -107,6 +136,9 @@ Token scanToken() {
 	if (!isAtEnd()) return makeToken(TOKEN_EOF);
 
 	char c = advance();
+
+	if (isAlpha(c)) return identifier();
+	if (isDigit(c)) return number();
 
 	switch(c) {
 		case '(': return makeToken(TOKEN_LEFT_PAREN);
