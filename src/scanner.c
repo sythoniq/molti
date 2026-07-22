@@ -32,6 +32,11 @@ static char peek() {
 	return *scanner.current;
 }
 
+static char peekNext() {
+	if (isAtEnd()) return '\0';
+	return scanner.current[1];
+}
+
 static Token makeToken(TokenType type) {
 	Token token;
 	token.type = type;
@@ -65,6 +70,13 @@ static void skipWhiteSpace() {
 			case '\n':
 				scanner.line++;
 				advance();
+				break;
+			case '/':
+				if (peekNext() == '/') {
+					while (peek() != '\n' && isAtEnd()) advance();
+				} else {
+					return;
+				}
 				break;
 			default: 
 				return;
