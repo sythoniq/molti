@@ -84,6 +84,17 @@ static void skipWhiteSpace() {
 	}
 }
 
+static Token string() {
+	while (peek() != '"' && !isAtEnd()) {
+		if (peek() == '\n') scanner.line++;
+		advance();
+	}
+	if (isAtEnd()) return errorToken("Unterminated string.");
+
+	advance();
+	return makeToken(TOKEN_STRING); 
+}
+
 void initScanner(const char* source) {
 	scanner.start = source;
 	scanner.current = source;
@@ -113,6 +124,7 @@ Token scanToken() {
 		case '=': return makeToken(match('=') ? TOKEN_BANG_EQUAL : TOKEN_EQUAL);
 		case '<': return makeToken(match('=') ? TOKEN_LESS_EQUAL : TOKEN_LESS);
 		case '>': return makeToken(match('=') ? TOKEN_GREATER_EQUAL: TOKEN_GREATER);
+		case '"': return string();
 	}
 
 	return errorToken("Unexpected character.");
