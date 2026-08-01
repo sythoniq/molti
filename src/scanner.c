@@ -92,6 +92,8 @@ static TokenType checkKeyword(int start, int length,
 	return TOKEN_IDENTIFIER;
 }
 
+// Character inspection for reserved keywords for molti... using a trie data structure
+// Deterministic Finite Automaton (DFA) || State machine
 static TokenType identifierType() {
 	switch (scanner.start[0]) {
 		case 'a': return checkKeyword(1, 2, "nd", TOKEN_AND);
@@ -105,6 +107,23 @@ static TokenType identifierType() {
 		case 's': return checkKeyword(1, 4, "uper", TOKEN_SUPER);
 		case 'v': return checkKeyword(1, 2, "ar", TOKEN_VAR);
 		case 'w': return checkKeyword(1, 4, "hile", TOKEN_WHILE);
+		case 'f':
+			if (scanner.current - scanner.start > 1) {
+				switch (scanner.start[1]) {
+					case 'a': return checkKeyword(2, 3, "lse", TOKEN_FALSE);
+					case 'o': return checkKeyword(2, 1, "r", TOKEN_FOR);
+					case 'u': return checkKeyword(2, 1, "n", TOKEN_FUN);
+				}
+			}
+			break;
+		case 't':
+			if (scanner.current - scanner.start > 1) {
+				switch (scanner.start[1]) {
+					case 'r': return checkKeyword(2, 2, "ue", TOKEN_TRUE);
+					case 'h': return checkKeyword(2, 2, "is", TOKEN_THIS);
+				}
+			}
+			break;
 	}
 
 	return TOKEN_IDENTIFIER;
