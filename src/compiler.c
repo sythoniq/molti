@@ -244,7 +244,6 @@ bool compile(const char* source, Chunk* chunk) {
 	parser.hadError = false;
 	parser.panicMode = false;
 	advance();
-	printf("%d\n", parser.current.type);
 	expression();
 	consume(TOKEN_EOF, "Expect end of expression.");
 	

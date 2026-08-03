@@ -172,9 +172,10 @@ void initScanner(const char* source) {
 }
 
 Token scanToken() {
+	skipWhiteSpace();
 	scanner.start = scanner.current;
 
-	if (!isAtEnd()) return makeToken(TOKEN_EOF);
+	if (isAtEnd()) return makeToken(TOKEN_EOF);
 
 	char c = advance();
 
