@@ -1,21 +1,24 @@
-#ifndef MOLTI_MEMORY_H
-#define MOLTI_MEMORY_H
+#ifndef molti_memory_h
+#define molti_memory_h
 
 #include "common.h"
 
-// This macro grow capacity by checking if the current capacity is less than x (to save memory for initialization from 0) then doubles the capacity.
+#define ALLOCATE(type, count) \
+    (type*)reallocate(NULL, 0, sizeof(type) * (count))
+
+#define FREE(type, pointer) reallocate(pointer, sizeof(type), 0)
 
 #define GROW_CAPACITY(capacity) \
-				((capacity) < 12 ? 12 : (capacity) * 2)
+    ((capacity) < 8 ? 8 : (capacity) * 2)
 
-#define GROW_ARRAY(type, pointer, oldCap, newCap) \
-			(type*)reallocate(pointer, sizeof(type) * (oldCap), \
-										 sizeof(type) * (newCap))	
+#define GROW_ARRAY(type, pointer, oldCount, newCount) \
+    (type*)reallocate(pointer, sizeof(type) * (oldCount), \
+        sizeof(type) * (newCount))
 
-void* reallocate(void* pointer, size_t oldCap, size_t newCap);
+#define FREE_ARRAY(type, pointer, oldCount) \
+    reallocate(pointer, sizeof(type) * (oldCount), 0)
 
-
-#define FREE_ARRAY(type, pointer, cap) \
-				reallocate(pointer, sizeof(type) * cap, 0)
+void* reallocate(void* pointer, size_t oldSize, size_t newSize);
+void freeObjects();
 
 #endif

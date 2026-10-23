@@ -1,33 +1,43 @@
-#ifndef MOLTI_VM_H
-#define MOLTI_VM_H
+#ifndef molti_vm_h
+#define molti_vm_h
 
-#include "chunk.h"
+#include "object.h"
+#include "table.h"
 #include "value.h"
 
-#define STACK_MAX 256
+#define FRAMES_MAX 64
+#define STACK_MAX (FRAMES_MAX * UINT8_COUNT)
+
+// One active function call.
+typedef struct {
+  ObjFunction* function;
+  uint8_t* ip;     // where we are in this function's bytecode
+  Value* slots;    // first stack slot this function owns
+} CallFrame;
 
 typedef struct {
-				Chunk* chunk;
-				// Create a instruction pointer of type byte
-				uint8_t* ip; // This is to track where the vm is currently at, would be better to have as a local variable for C to keep it in a register as it changes quite often.
-				// In C its faster to dereference a pointer than to have a int index of an array to find where exactly the VM is at within the array of bytes (Chunk)
-				Value stack[STACK_MAX];
-				Value *stackTop;
+  CallFrame frames[FRAMES_MAX];
+  int frameCount;
+
+  Value stack[STACK_MAX];
+  Value* stackTop;
+  Table globals;
+  Table strings;   // interned strings
+  Obj* objects;    // linked list of every heap object
 } VM;
 
-// Enum = named int constant, helps just make sure that the values/data type of int has a understable/readable name.
-
 typedef enum {
-				INTERPRET_OK,
-				INTERPRET_COMPILE_ERROR,
-				INTERPRET_RUNTIME_ERROR
-} InterpreterResult;
+  INTERPRET_OK,
+  INTERPRET_COMPILE_ERROR,
+  INTERPRET_RUNTIME_ERROR
+} InterpretResult;
 
-void initializeVM();
+extern VM vm;
+
+void initVM();
 void freeVM();
-
+InterpretResult interpret(const char* source);
 void push(Value value);
 Value pop();
 
-InterpreterResult interpret(const char* source);
 #endif
