@@ -170,7 +170,7 @@ static InterpretResult run() {
     } while (false)
 
   for (;;) {
-		traceStep(*frame->ip, frame->function->chunk.lines[frame->ip - frame->function->chunk.code]);
+		traceStep(&frame->function->chunk, frame->ip);
 #ifdef DEBUG_TRACE_EXECUTION
     printf("          ");
     for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
