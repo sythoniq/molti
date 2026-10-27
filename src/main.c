@@ -4,6 +4,7 @@
 
 #include "common.h"
 #include "vm.h"
+#include "trace.h"
 
 static void repl() {
   char line[1024];
@@ -58,8 +59,8 @@ static void runFile(const char* path) {
 }
 
 int main(int argc, const char* argv[]) {
-  initVM();
-
+	initVM();
+	traceInit();
   if (argc == 1) {
     repl();
   } else if (argc == 2) {
@@ -69,6 +70,7 @@ int main(int argc, const char* argv[]) {
     exit(64);
   }
 
+	traceClose();
   freeVM();
   return 0;
 }

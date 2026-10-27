@@ -11,7 +11,6 @@ void disassembleChunk(Chunk* chunk, const char* name) {
   }
 }
 
-// Instruction followed by a constant-table index.
 static int constantInstruction(const char* name, Chunk* chunk,
                                int offset) {
   uint8_t constant = chunk->code[offset + 1];
@@ -21,13 +20,11 @@ static int constantInstruction(const char* name, Chunk* chunk,
   return offset + 2;
 }
 
-// Instruction with no operands.
 static int simpleInstruction(const char* name, int offset) {
   printf("%s\n", name);
   return offset + 1;
 }
 
-// Instruction followed by a one-byte operand (a stack slot or arg count).
 static int byteInstruction(const char* name, Chunk* chunk,
                            int offset) {
   uint8_t slot = chunk->code[offset + 1];
@@ -35,7 +32,6 @@ static int byteInstruction(const char* name, Chunk* chunk,
   return offset + 2;
 }
 
-// Instruction followed by a two-byte jump distance.
 static int jumpInstruction(const char* name, int sign,
                            Chunk* chunk, int offset) {
   uint16_t jump = (uint16_t)(chunk->code[offset + 1] << 8);

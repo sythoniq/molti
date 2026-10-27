@@ -3,6 +3,7 @@
 #include "memory.h"
 #include "object.h"
 #include "vm.h"
+#include "trace.h"
 
 // All allocation goes through here. There is no garbage collector:
 // objects stay alive until the program ends, when freeObjects() frees them.
@@ -23,15 +24,18 @@ static void freeObject(Obj* object) {
       ObjFunction* function = (ObjFunction*)object;
       freeChunk(&function->chunk);
       FREE(ObjFunction, object);
+			traceFree(object);
       break;
     }
     case OBJ_NATIVE:
       FREE(ObjNative, object);
+			traceFree(object);
       break;
     case OBJ_STRING: {
       ObjString* string = (ObjString*)object;
       FREE_ARRAY(char, string->chars, string->length + 1);
       FREE(ObjString, object);
+			traceFree(object);
       break;
     }
   }

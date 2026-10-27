@@ -6,6 +6,7 @@
 #include "table.h"
 #include "value.h"
 #include "vm.h"
+#include "trace.h"
 
 #define ALLOCATE_OBJ(type, objectType) \
     (type*)allocateObject(sizeof(type), objectType)
@@ -16,6 +17,8 @@ static Obj* allocateObject(size_t size, ObjType type) {
 
   object->next = vm.objects;
   vm.objects = object;
+
+	traceAlloc(object, type, size);
   return object;
 }
 

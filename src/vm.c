@@ -9,6 +9,7 @@
 #include "object.h"
 #include "memory.h"
 #include "vm.h"
+#include "trace.h"
 
 VM vm;
 
@@ -169,6 +170,7 @@ static InterpretResult run() {
     } while (false)
 
   for (;;) {
+		traceStep(*frame->ip, frame->function->chunk.lines[frame->ip - frame->function->chunk.code]);
 #ifdef DEBUG_TRACE_EXECUTION
     printf("          ");
     for (Value* slot = vm.stack; slot < vm.stackTop; slot++) {
