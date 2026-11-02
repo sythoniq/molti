@@ -8,5 +8,6 @@ void traceClose();
 void traceStep(Chunk *chunk, uint8_t *ip);
 void traceAlloc(void* p, int type, size_t size);
 void traceFree(void* p);
+void traceFinish(void);
 
 #endif

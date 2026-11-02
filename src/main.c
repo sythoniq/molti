@@ -70,7 +70,8 @@ int main(int argc, const char* argv[]) {
     exit(64);
   }
 
-	traceClose();
+	traceFinish();
   freeVM();
+	traceClose();
   return 0;
 }

@@ -1,8 +1,7 @@
-print 1 + 2;
-
-fun fib() {
-	print("hello");
+fun foo(number) {
+	if (number > 3) {
+		print("Foo");
+	}
 }
 
-fib();
-
+foo(10);
